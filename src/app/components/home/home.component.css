@@ -1,0 +1,35 @@
+mat-card.container.mat-card {
+    display: block !important;
+}
+
+table {
+    width: 100%;
+}
+
+table.mat-elevation-z8.mat-table {
+    background-color: #fbfafa;
+}
+
+.item.header {
+    display: flex;
+    /* margin: 20px; */
+    justify-content: space-evenly;
+}
+
+button.mat-raised-button.mat-button-base.mat-accent {
+    height: 70px;
+}
+
+tr.mat-row {
+    cursor: pointer;
+}
+
+button.logout-btn.mat-raised-button.mat-button-base {
+    background: transparent;
+    box-shadow: 0 0 0 transparent;
+}
+
+mat-icon.mat-icon.notranslate.material-icons.mat-icon-no-color {
+    font-size: 40px;
+    color: #6b4d57;
+}

@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+mat-card.container.mat-card {
+    background-color: #fbe8d1;
+    box-shadow: 3px 5px 6px #ead6d8;
+    color: #948978;
+    width: 50%;
+    margin: 0 auto;
+    position: relative;
+    top: 120px;
+    display: flex;
+    align-items: center;
+}
+
+.item {
+    flex-grow: 1;
+    margin: 40px;
+}
+
+button.mat-raised-button.mat-button-base {
+    margin: 5px;
+}
