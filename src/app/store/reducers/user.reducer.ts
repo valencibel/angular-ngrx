@@ -1,16 +1,16 @@
-import * as fromUser from 'src/app/components/user.actions';
-import { User } from '../models/user.model';
+import * as fromUser from 'src/app/store/actions/user.actions';
+import { User } from 'src/app/models/user.model'; 
 
-const user1 = new User('test1@gmail.com', '123');
-const user2 = new User('test2@gmail.com', '123');
-const stateInitial: User[] = [user1, user2];
+const user1 = new User('test1@test.com', '123');
+const user2 = new User('test2@test.com', '123');
+const initialState: User[] = [user1, user2];
 
-export function userReducer( state = stateInitial, action: fromUser.Actions) {
+export function userReducer(state = initialState, action: fromUser.All) {
     switch (action.type) {
-        case fromUser.ADD_USER:
+        case fromUser.UserActionTypes.ADD_USER:
             const user = new User(action.email, action.password);
             return [...state, user];
-        case fromUser.UPDATE_USER:
+        case fromUser.UserActionTypes.UPDATE_USER:
             return state.map( (userItem) => {
                 if ( userItem.id === action.id ) {
                     return {
@@ -21,7 +21,7 @@ export function userReducer( state = stateInitial, action: fromUser.Actions) {
                     return userItem;
                 }
             });
-        case fromUser.DELETE_USER:
+        case fromUser.UserActionTypes.DELETE_USER:
             return state.filter( (userItem) => {
                 return userItem.id !== action.id;
             });

@@ -1,0 +1,33 @@
+<div mat-dialog-title>
+    <h3>Angular Material + NGRX | <span>{{data.typeOperation}}</span></h3>
+</div>
+    <div mat-dialog-content class="item">
+        <!-- <form (ngSubmit)="onSubmit()" ngNativeValidate> -->
+            <mat-form-field> 
+                <input  
+                    matInput 
+                    [(ngModel)]="data.email"
+                    name="email"
+                    type="email"
+                    required
+                    class="form-control"
+                    disabled="{{show}}"                     
+                    placeholder="enter your email">
+            </mat-form-field>
+            <mat-form-field> 
+                <input  
+                matInput 
+                [(ngModel)]="data.password"
+                name="password"
+                type="password"
+                required
+                class="form-control"
+                disabled="{{show}}" 
+                placeholder="enter a password">
+            </mat-form-field>
+        <!-- </form>         -->
+    </div>
+<div mat-dialog-actions>
+    <button mat-raised-button class="submit" type="submit" disabled="{{show}}" *ngIf="!show" (click)="onSubmit()">CREATE</button>
+    <button mat-button (click)="close()" cdkFocusInitial>CANCEL</button>
+</div>

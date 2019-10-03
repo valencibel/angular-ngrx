@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { User } from 'src/app/models/user.model';
-import { AppState } from 'src/app/app.reducers';
-import { AddUserAction, DeleteUserAction } from '../user.actions';
 import { MatDialog } from '@angular/material';
-import { SignUpComponent } from '../sign-up/sign-up.component';
 import { SelectionModel } from '@angular/cdk/collections';
+import { UserModalComponent } from '../user-modal/user-modal.component';
+import { AppState, selectAuthState } from 'src/app/store/app.states';
+import * as userActions from 'src/app/store/actions/user.actions';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,15 @@ export class HomeComponent implements OnInit {
   displayedColumns: string[] = ['select','email', 'password'];
   selection = new SelectionModel<User>(true, []);
 
-  constructor(private router: Router, private store: Store<AppState>, public dialog: MatDialog) { }
+  getState: Observable<any>;
+  isAuthenticated: false;
+  // user = null;
+  errorMessage = null;
+
+  constructor(private router: Router, private store: Store<AppState>, public dialog: MatDialog) {
+    this.getState = this.store.select(selectAuthState);
+    console.log(this.getState);
+   }
 
    /** Whether the number of selected elements matches the total number of rows. */
    isAllSelected() {
@@ -49,6 +58,12 @@ export class HomeComponent implements OnInit {
       this.users = [...state];
       console.log(this.users);
     });
+
+    this.getState.subscribe((state) => {
+      this.isAuthenticated = state.isAuthenticated;
+      this.user = state.user;
+      this.errorMessage = state.errorMessage;
+    });
   }
 
   add(){
@@ -69,23 +84,23 @@ export class HomeComponent implements OnInit {
   delete(){
     console.log(this.selection.selected);
     const id = this.selection.selected.shift().id;
-    const action = new DeleteUserAction(id);
+    const action = new userActions.DeleteUserAction(id);
     this.store.dispatch(action);
   }
 
   openModal(id: any, email: string, password: string, typeOperation: string){
-    const dialogRef = this.dialog.open(SignUpComponent, {
+    const dialogRef = this.dialog.open(UserModalComponent, {
       width: '450px',
       data: {id, email, password, typeOperation}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('closed')
+      console.log('closed');
     });
   }
 
   logout(){
-    this.router.navigateByUrl('');
+    this.store.dispatch(new userActions.LogOut);
   }
 
 }

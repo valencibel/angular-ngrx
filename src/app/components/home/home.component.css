@@ -33,3 +33,12 @@ mat-icon.mat-icon.notranslate.material-icons.mat-icon-no-color {
     font-size: 40px;
     color: #6b4d57;
 }
+
+.div-container {
+    display: flex;
+}
+
+.current-state{
+    width: 250px !important;
+    margin-right: -100px !important;
+}

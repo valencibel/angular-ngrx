@@ -1,9 +1,11 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { User } from 'src/app/models/user.model';
-import { AppState } from 'src/app/app.reducers';
-import { AddUserAction, UpdateUserAction } from '../user.actions';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { Observable } from 'rxjs';
+import { UserAuth } from 'src/app/models/user-auth';
+import * as state from 'src/app/store/app.states';
+import { SignUp } from 'src/app/store/actions/user.actions';
+import { MatDialog } from '@angular/material';
+import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-sign-up',
@@ -12,34 +14,37 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 })
 export class SignUpComponent implements OnInit {
 
-  user = new User('', '');
-  show: boolean;
+  user: UserAuth = new UserAuth();
+  getState: Observable<any>;
+  errorMessage: string | null;
 
-  constructor(private store: Store<AppState>, public dialogRef: MatDialogRef<SignUpComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {id?: number, email?: string, password?: string, typeOperation?: string}) { }
+  constructor(private store: Store<state.AppState>, public dialog: MatDialog) { 
+    this.getState = this.store.select(state.selectAuthState);
+  }
 
   ngOnInit() {
-    console.log(this.data);
-    this.data.typeOperation == 'show' ? this.show = true : this.show = false;
-    console.log(this.show);
+    this.getState.subscribe((state) => {
+      this.errorMessage = state.errorMessage;
+      this.errorMessage ? this.openAlert(state.errorMessage) : null;
+    });
   }
 
   onSubmit(): void {
-    if(this.data.typeOperation == 'create'){
-      console.log('add');
-      const action = new AddUserAction(this.data.email, this.data.password);
-      this.store.dispatch(action);
-      this.close();
-    } else if(this.data.typeOperation == 'update') {
-      console.log('update');
-      const action = new UpdateUserAction(this.data.id, this.data.email, this.data.password);
-      this.store.dispatch(action);
-      this.close();
-    } 
+    const payload = {
+      email: this.user.email,
+      password: this.user.password
+    };
+    this.store.dispatch(new SignUp(payload));
   }
 
-  close(): void {
-    this.dialogRef.close();
+  openAlert(message: string){
+    const dialogRef = this.dialog.open(AlertModalComponent, {
+      width: '450px',
+      data: { message }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('closed');
+    });
   }
 
 }
